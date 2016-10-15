@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ChatIO</title>
+	<style>
+		body{
+			background:#f9f9f9;
+		}
+
+		#container{
+			width:700px;
+			margin:0 auto;
+		}
+
+		#chatWindow{
+			height:300px;
+		}
+
+		#mainWrapper{
+			display:none;
+			text-align: center;
+		}
+
+		#chatWrapper{
+			float:left;
+			border:1px #ccc solid;
+			border-radius: 10px;
+			background:#f4f4f4;
+			padding:10px;
+		}
+
+		#userWrapper{
+			float:left;
+			border:1px #ccc solid;
+			border-radius: 10px;
+			background:#f4f4f4;
+			padding:10px;
+			margin-left:20px;
+			width:300px;
+		
+		}
+
+		#namesWrapper{
+			
+			text-align:center;
+			border:1px #ccc solid;
+			border-radius: 10px;
+			background:#f4f4f4;
+			padding:10px;
+			margin-left:20px;
+		}
+
+		input{
+			height:30px;
+			border:solid 1px #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="namesWrapper">
+			<h2>User login</h2>
+			<p>Create Username:</p>
+			<form id="usernameForm">
+				<input type="text" size="35" id="username">
+				<input type="submit" value="Submit">
+			</form>
+		</div>
+
+		<div id="mainWrapper">
+			<h2>ChatIO</h2>
+			<div id="chatWrapper">
+				<div id="chatWindow"></div>
+				<form id="messageForm">
+					<input type="text" size="35" id="message" placeholder="Say Something...">
+					<input type="submit" value="Submit">
+				</form>
+			</div>
+
+			<div id="userWrapper">
+			<h2>User list</h2>
+				<div id="users"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+		$(function(){
+			var socket = io.connect();
+			var $messageForm = $('#messageForm');
+			var $message = $('#message');
+			var $chat = $('#chatWindow');
+			var $usernameForm =  $('#usernameForm');
+			var $username = $('#username');
+			var $users = $('#users');
+			$messageForm.submit(function(e){
+				e.preventDefault();
+				socket.emit('send message', $message.val());
+				$message.val('');
+			});
+
+
+			$usernameForm.submit(function(e){
+
+				e.preventDefault();
+				console.log($username.val());
+				socket.emit('userlogin', $username.val());
+					
+				$username.val('');
+					console.log($username.val());
+			});
+
+			socket.on('new message', function(data){
+				$chat.append(data.user + ': '  +data.msg+'<br>');
+			});
+
+			socket.on('numberOfusers', function(data){
+				$users.html('');
+				for(var i = 0 ;i<data.length;i++){
+
+					$users.append((i+1) + ': ' + data[i] + '<br>');
+				}
+				$('#namesWrapper').hide();	
+				$('#mainWrapper').show();			
+			});
+
+
+
+			
+		});
+		</script>
+</body>
+</html>

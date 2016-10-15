@@ -13,8 +13,11 @@
 		}
 
 		#chatWindow{
+			width:300px;
 			height:400px;
 			overflow: scroll;
+			text-align: left;
+			word-wrap: break-word;
 		}
 
 		#mainWrapper{
@@ -117,7 +120,7 @@
 			});
 
 			socket.on('new message', function(data){
-				$chat.append(data.user + ': '  +data.msg+'<br>');
+				$chat.append('<p><mark>'+data.user + '</mark>: '  +data.msg+'</p>');
 				$chat.scrollTop = $chat.scrollHeight;
 				$("#chatWindow").scrollTop($("#chatWindow")[0].scrollHeight);
 			});

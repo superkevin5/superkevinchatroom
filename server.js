@@ -8,10 +8,10 @@ console.log('Server Running...');
 
 
 var history = [];
+var historyMessage = [];
 
 var users = [];
 app.use("/scripts", express.static(__dirname + '/public/js/bower_components'));
-
 
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
@@ -19,11 +19,7 @@ app.get('/', function(req, res){
 
 
 app.get('/history', function(req, res){
-
-
 	res.json(history);
-
-
 });
 
 io.sockets.on('connection', function(socket){
@@ -31,6 +27,7 @@ io.sockets.on('connection', function(socket){
 
 	// Send Message
 	socket.on('send message', function(data){
+		historyMessage.push(socket.username + ': '  +data);
 		io.sockets.emit('new message', {msg: data,user:socket.username});
 	});
 
@@ -42,6 +39,7 @@ io.sockets.on('connection', function(socket){
 		console.log(data);
 		io.sockets.emit('numberOfusers', users);
 		io.sockets.emit('totalnumber', history.length);
+		io.sockets.emit('historyMessage', historyMessage);
 	});
 
 

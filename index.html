@@ -123,13 +123,20 @@
 			});
 
 
+			socket.on('historyMessage', function(history){
+				$chat.html('');
+				for(var i =0;i<history.length;i++){
 
-			socket.on('totalnumber', function(data){
-
-
-				$('#history').html(data + ' users have used this chat App');
+				var data= history[i];
+				$chat.append(data + '<br>');
+			}
+				
+				$("#chatWindow").scrollTop($("#chatWindow")[0].scrollHeight);
 			});
 
+			socket.on('totalnumber', function(data){
+				$('#history').html(data + ' users have used this chat App');
+			});
 
 			socket.on('numberOfusers', function(data){
 				$users.html('');

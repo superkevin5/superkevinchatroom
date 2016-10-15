@@ -9,7 +9,8 @@
   "author": "Brad Traversy",
   "license": "ISC",
   "dependencies": {
-  	"socket.io": "*",
-  	"express": "*"
-  }
+    "socket.io": "*",
+    "express": "*"
+  },
+  "devDependencies": {}
 }

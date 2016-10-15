@@ -1,0 +1,20 @@
+{
+  "name": "kevinchatroom",
+  "description": "Simple chat app",
+  "main": "server.js",
+  "authors": [
+    "Brad Traversy"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/superkevin5/superkevinchatroom",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "^3.1.1"
+  }
+}

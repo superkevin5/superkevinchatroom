@@ -6,12 +6,24 @@ var express = require('express'),
 server.listen(process.env.PORT || 3001);
 console.log('Server Running...');
 
+
+var history = [];
+
 var users = [];
 app.use("/scripts", express.static(__dirname + '/public/js/bower_components'));
 
 
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
+});
+
+
+app.get('/history', function(req, res){
+
+
+	res.json(history);
+
+
 });
 
 io.sockets.on('connection', function(socket){
@@ -26,13 +38,14 @@ io.sockets.on('connection', function(socket){
 	socket.on('userlogin',function(data){
 		socket.username = data;
 		users.push(data);
+		history.push({username:data, time: new Date()});
 		console.log(data);
 		io.sockets.emit('numberOfusers', users);
+		io.sockets.emit('totalnumber', history.length);
 	});
 
 
 	socket.on('disconnect',function(data){
-
 
 		if(!socket.username){
 			return;

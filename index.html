@@ -13,7 +13,8 @@
 		}
 
 		#chatWindow{
-			height:300px;
+			height:400px;
+			overflow: scroll;
 		}
 
 		#mainWrapper{
@@ -62,17 +63,18 @@
 			<h2>User login</h2>
 			<p>Create Username:</p>
 			<form id="usernameForm">
-				<input type="text" size="35" id="username">
+				<input type="text" size="35" id="username" required pattern="[A-Za-z]+" placeholder="Alphabets only">
 				<input type="submit" value="Submit">
 			</form>
 		</div>
 
 		<div id="mainWrapper">
-			<h2>ChatIO</h2>
+			<h2>Welcome to ChatIO <i id="user"></i></h2>
+			<h4><mark><b id="history"></b></mark></h4>
 			<div id="chatWrapper">
 				<div id="chatWindow"></div>
 				<form id="messageForm">
-					<input type="text" size="35" id="message" placeholder="Say Something...">
+					<input type="text" size="35" id="message" placeholder="Say Something..." required>
 					<input type="submit" value="Submit">
 				</form>
 			</div>
@@ -106,27 +108,37 @@
 
 				e.preventDefault();
 				console.log($username.val());
+				$('#user').html('');
+				$('#user').append($username.val());
 				socket.emit('userlogin', $username.val());
-					
+				
 				$username.val('');
 					console.log($username.val());
 			});
 
 			socket.on('new message', function(data){
 				$chat.append(data.user + ': '  +data.msg+'<br>');
+				$chat.scrollTop = $chat.scrollHeight;
+				$("#chatWindow").scrollTop($("#chatWindow")[0].scrollHeight);
 			});
+
+
+
+			socket.on('totalnumber', function(data){
+
+
+				$('#history').html(data + ' users have used this chat App');
+			});
+
 
 			socket.on('numberOfusers', function(data){
 				$users.html('');
 				for(var i = 0 ;i<data.length;i++){
-
 					$users.append((i+1) + ': ' + data[i] + '<br>');
 				}
 				$('#namesWrapper').hide();	
 				$('#mainWrapper').show();			
 			});
-
-
 
 			
 		});
